@@ -1,6 +1,5 @@
-=============
 liftovergl.py
-============
+=============
 Usage
 -----
 | liftovergl.py --help

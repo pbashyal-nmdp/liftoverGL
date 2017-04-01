@@ -247,12 +247,8 @@ def main():
     history = read_history()
     gl_ids = mk_glids(gl, source, history)
     target_gl = mk_target(gl_ids, target, history)
-    # print(target_gl, "\n")
     s_response = post_gl(gl, source, resource)
-    # print(s_response)
     t_response = post_gl(target_gl, target, resource)
-    # print(t_response)
-    # print(t_uri, "\n")
     output = json.dumps(build_output(s_response, t_response),
                         sort_keys=True, indent=4)
     print(output)
