@@ -89,3 +89,13 @@ and another's name is changed from ``HLA-A*26:03:02`` to ``HLA-A*26:111`` ::
        "target_gl": "HLA-A*26:111",
        "target_uri": "https://gl.nmdp.org/imgt-hla/3.25.0/multilocus-unphased-genotype/uw"
    }
+
+Same as above, but added ``HLA-B`` locus::
+
+   ./liftovergl.py -g 'HLA-A*03:194+HLA-A*26:03:02^HLA-B*40:10:01+HLA-B*44:03:01/HLA-B*44:03:02^HLA-DRB1*11:11:02+HLA-DRB1*08:01:03' -s "3.18.0" -t "3.25.0"
+   {
+       "source_gl": "HLA-A*03:194+HLA-A*26:03:02^HLA-B*40:10:01+HLA-B*44:03:01/HLA-B*44:03:02^HLA-DRB1*11:11:02+HLA-DRB1*08:01:03",
+       "source_uri": "https://gl.nmdp.org/imgt-hla/3.18.0/multilocus-unphased-genotype/m",
+       "target_gl": "HLA-A*26:111^HLA-B*40:10:01:01+HLA-B*44:03:01:01/HLA-B*44:03:02",
+       "target_uri": "https://gl.nmdp.org/imgt-hla/3.25.0/multilocus-unphased-genotype/uy"
+   };
