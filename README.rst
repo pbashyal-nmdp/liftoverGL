@@ -47,13 +47,13 @@ Requirements:
 ------------
 ::
 
-#!/usr/bin/env python3
-import argparse
-import json
-import pandas
-import re
-import requests
-import sys
+  #!/usr/bin/env python3
+  import argparse
+  import json
+  import pandas
+  import re
+  import requests
+  import sys
 
 
 Examples
