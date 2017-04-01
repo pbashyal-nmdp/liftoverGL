@@ -88,4 +88,4 @@ and another's name is changed from ``HLA-A*26:03:02`` to ``HLA-A*26:111`` ::
        "source_uri": "https://gl.nmdp.org/imgt-hla/3.18.0/multilocus-unphased-genotype/k",
        "target_gl": "HLA-A*26:111",
        "target_uri": "https://gl.nmdp.org/imgt-hla/3.25.0/multilocus-unphased-genotype/uw"
-}
+   }
