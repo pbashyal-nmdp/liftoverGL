@@ -21,7 +21,7 @@ Description
 -----------
 Converts a GL String from one version of the IMGT/HLA database to another.
 
-This program uses the Allelelist_history.txt file from
+This program uses the ``Allelelist_history.txt`` file from
 https://github.com/ANHIG/IMGTHLA
 which must be downloaded separately.
 
