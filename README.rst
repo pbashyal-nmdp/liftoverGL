@@ -78,10 +78,10 @@ Examples
        "target_uri": "https://gl.nmdp.org/imgt-hla/3.25.0/genotype/p9"
    }
 
-::
 
-   In this example, three alleles get dropped going from ``3.18.0`` to ``3.25.0``,
-   and another's name is changed from ``HLA-A*26:03:02`` to ``HLA-A*26:111``  
+In the following example, three alleles get dropped going from ``3.18.0`` to ``3.25.0``,
+and another's name is changed from ``HLA-A*26:03:02`` to ``HLA-A*26:111`` :: 
+
    ./liftovergl.py -g 'HLA-A*03:194+HLA-A*26:03:02^HLA-DRB1*11:11:02+HLA-DRB1*08:01:03' -s "3.18.0" -t "3.25.0"
    {
        "source_gl": "HLA-A*03:194+HLA-A*26:03:02^HLA-DRB1*11:11:02+HLA-DRB1*08:01:03",
