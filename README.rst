@@ -1,7 +1,8 @@
 liftovergl.py
 =============
 Usage
------::
+-----
+::
 
    liftovergl.py --help
    usage: liftovergl.py [-h] [-g GLSTRING | -u URI] -s SOURCE [-t TARGET]
@@ -37,12 +38,12 @@ alleles. eg., the following alleles exist for 3.20.0 and 3.24.0:
 | ``HLA14804``  ``HLA-A*24:03:01:02``
 |
 | When ``HLA-A*24:03:01`` is converted from 3.20.0 to 3.25.0, it gets assigned to
-| ``HLA-A*24:03:01:01``
-| and not
+| ``HLA-A*24:03:01:01``  and not
 | ``HLA-A*24:03:01:01/HLA-A*24:03:01:02``
 
 Examples
---------::
+--------
+::
 
    ./liftovergl.py -u "https://gl.nmdp.org/imgt-hla/3.20.0/genotype/2i4" -s '3.20.0' -t '3.25.0'
    {
@@ -51,7 +52,9 @@ Examples
        "target_gl": "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01:01",
        "target_uri": "https://gl.nmdp.org/imgt-hla/3.25.0/genotype/p9"
    }
-    
+
+::
+
    ./liftovergl.py -g "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01" -s '3.20.0' -t '3.25.0'
    {
        "source_gl": "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01",
