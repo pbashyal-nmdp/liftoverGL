@@ -64,6 +64,10 @@ G3 = ("HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01")
 S3 = "3.20.0"
 T3 = "3.25.0"
 
+G4 = ("HLA-A*23:69^HLA-DRB1*11:11:02+HLA-DRB1*08:01:03")
+S4 = "3.20.0"
+T4 = "3.25.0"
+
 
 def read_history():
     """
@@ -91,6 +95,9 @@ def mk_glids(glstring, version, history):
         hla_id = history[history[vers] == allele[4:]].index.tolist()
         if len(hla_id) == 1:
             glstring = glstring.replace(allele, hla_id[0])
+        elif len(hla_id) == 0:
+            print(allele, "does not exist in IMGT/HLA ver", version)
+            sys.exit()
         else:
             print(allele, "has more than one id:", hla_id)
             sys.exit()
@@ -245,9 +252,18 @@ def main():
         resource = get_resource(gl)
 
     history = read_history()
+    print("gl =", gl)
+    print("source =", source)
+    print("target =", target)
     gl_ids = mk_glids(gl, source, history)
+    print("IDs =", gl_ids, "\n")
     target_gl = mk_target(gl_ids, target, history)
+    if not target_gl:
+        print("empty target GL String, all alleles dropped")
+        sys.exit()
+    print("target GL =", target_gl, "\n")
     s_response = post_gl(gl, source, resource)
+    print("source location =", s_response['text'], "\n")
     t_response = post_gl(target_gl, target, resource)
     output = json.dumps(build_output(s_response, t_response),
                         sort_keys=True, indent=4)
