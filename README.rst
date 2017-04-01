@@ -23,22 +23,25 @@ Usage
      -h, --help                          show this help message and exit
      -g GLSTRING, --glstring GLSTRING    GL String to be converted
      -u URI, --uri URI                   GL Service URI of GL String
-     -j JFILE, --jfile JFILE             input file containing JSON
+     -f JFILE, --jfile JFILE             input file containing JSON
      -s SOURCE, --source SOURCE          Source IMGT/HLA version, e.g., '3.0.0'
      -t TARGET, --target TARGET           Target IMGT/HLA version, e.g. '3.25.0'
   
-| Either the GLSTRING or a URI pointing to itm, or a JSON file containing the
-| URI and source and target namespaces may be used.
-| If JFILE is used, TARGET and SOURCE to not need to be specified since it
-| is contained in the JFILE.
-| If TARGET isn't supplied, it defaults to 3.25.0
+Either of the following may be used for input:
+
+- GL String 
+- URI pointing to a GL String, 
+- JSON file containing the URI and source and target namespaces
+
+If JFILE is used, TARGET and SOURCE to not need to be specified since it
+is contained in the JFILE.
 
 Example JFILE::
 
   {
-      "sourceNamespace": "https://gl.nmdp.org/imgt-hla/3.24.0/",
-      "sourceUri":" https://gl.nmdp.org/imgt-hla/3.24.0/multilocus-unphased-genotype/0",
-      "targetNamespace": "https://gl.nmdp.org/imgt-hla/3.25.0/"
+      sourceNamespace: https://gl.nmdp.org/imgt-hla/3.20.0/,
+      sourceUri: https://gl.nmdp.org/imgt-hla/3.20.0/genotype/2i4,
+      targetNamespace: https://gl.nmdp.org/imgt-hla/3.25.0/
   }
 
 
@@ -81,7 +84,7 @@ Requirements:
 
 Examples
 --------
-::
+Using a URI for input::
 
    ./liftovergl.py -u "https://gl.nmdp.org/imgt-hla/3.20.0/genotype/2i4" -s '3.20.0' -t '3.25.0'
    {
@@ -91,9 +94,19 @@ Examples
        "target_uri": "https://gl.nmdp.org/imgt-hla/3.25.0/genotype/p9"
    }
 
-::
+Using a GL String for input::
 
    ./liftovergl.py -g "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01" -s '3.20.0' -t '3.25.0'
+   {
+       "source_gl": "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01",
+       "source_uri": "https://gl.nmdp.org/imgt-hla/3.20.0/genotype/2i4",
+       "target_gl": "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01:01",
+       "target_uri": "https://gl.nmdp.org/imgt-hla/3.25.0/genotype/p9"
+   }
+
+Using a JSON file with the example above for input::
+
+   ./liftovergl.py -f genotype.json 
    {
        "source_gl": "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01",
        "source_uri": "https://gl.nmdp.org/imgt-hla/3.20.0/genotype/2i4",

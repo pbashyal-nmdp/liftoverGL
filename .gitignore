@@ -92,5 +92,9 @@ ENV/
 # output files
 out.txt
 
+# swap files
+.swp
+
 # IMGT/HLA
 Allelelist_history.txt
+
