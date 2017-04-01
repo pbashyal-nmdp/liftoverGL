@@ -31,6 +31,7 @@ HLA-A*24:03:01:01/HLA-A*24:03:01:02
 """
 
 import argparse
+import json
 import pandas as pd
 import re
 import requests
@@ -170,13 +171,12 @@ def get_resource(glstring):
         return "allele"
 
 
-def post_gl(glstring, version):
+def post_gl(glstring, version, resource):
     """
     takes a GL String and version, and posts it to the gl.nmdp.org
     and returns a dictionary containing the status code, the
     response text, and the response location if successful
     """
-    resource = get_resource(glstring)
     url = 'http://gl.nmdp.org/imgt-hla/' + version + "/" + resource
     headers = {'content-type': 'plain/text'}
     response = requests.post(url, data=glstring, headers=headers)
@@ -192,6 +192,16 @@ def post_gl(glstring, version):
 def get_gl(uri):
     response = requests.get(uri)
     return response
+
+
+def build_output(s_response, t_response):
+    output = {
+        "source_gl": s_response['text'],
+        "source_uri": s_response['location'],
+        "target_gl": t_response['text'],
+        "target_uri": t_response['location'],
+    }
+    return output
 
 
 def main():
@@ -217,33 +227,35 @@ def main():
     if (args.glstring is None) and (args.uri is None):
         parser.error("at least one of --glstring or --uri required")
 
+    s_uri = args.uri
+    gl = args.glstring
     source = args.source
     target = args.target
 
-    if args.uri:
-        response = get_gl(args.uri)
+    if s_uri:
+        resource = s_uri.split('/')[-2]
+        response = get_gl(s_uri)
         if response.status_code == 200:
             gl = response.text
         else:
             print("status_code =", response.status_code)
             print("text =", response.text)
             sys.exit()
-    if args.glstring:
-        gl = args.glstring
+    if gl:
+        resource = get_resource(gl)
 
-    # gl = G3
-    # source = S3
-    # target = T3
     history = read_history()
-    # print(gl, "\n")
-    # s_uri = post_gl(gl, source)
-    # print(s_uri, "\n")
     gl_ids = mk_glids(gl, source, history)
-    # print(gl_ids, "\n")
     target_gl = mk_target(gl_ids, target, history)
     # print(target_gl, "\n")
-    t_uri = post_gl(target_gl, target)
-    print(t_uri, "\n")
+    s_response = post_gl(gl, source, resource)
+    # print(s_response)
+    t_response = post_gl(target_gl, target, resource)
+    # print(t_response)
+    # print(t_uri, "\n")
+    output = json.dumps(build_output(s_response, t_response),
+                        sort_keys=True, indent=4)
+    print(output)
 
 
 if __name__ == "__main__":
