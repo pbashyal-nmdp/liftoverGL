@@ -15,9 +15,32 @@ Usage
      -u URI,      --uri URI              GL Service URI of GL String
      -s SOURCE,   --source SOURCE        Source IMGT/HLA version
      -t TARGET,   --target TARGET        Target IMGT/HLA version
+
+   liftovergl.py -h
+   usage: liftovergl.py [-h] [-g GLSTRING | -u URI | -j JFILE] [-s SOURCE] [-t TARGET]
+
+   optional arguments:
+     -h, --help                          show this help message and exit
+     -g GLSTRING, --glstring GLSTRING    GL String to be converted
+     -u URI, --uri URI                   GL Service URI of GL String
+     -j JFILE, --jfile JFILE             input file containing JSON
+     -s SOURCE, --source SOURCE          Source IMGT/HLA version, e.g., '3.0.0'
+     -t TARGET, --target TARGET           Target IMGT/HLA version, e.g. '3.25.0'
   
-| Either the GLSTRING or a URI pointing to it may be used.
+| Either the GLSTRING or a URI pointing to itm, or a JSON file containing the
+| URI and source and target namespaces may be used.
+| If JFILE is used, TARGET and SOURCE to not need to be specified since it
+| is contained in the JFILE.
 | If TARGET isn't supplied, it defaults to 3.25.0
+
+Example JFILE::
+
+  {
+      "sourceNamespace": "https://gl.nmdp.org/imgt-hla/3.24.0/",
+      "sourceUri":" https://gl.nmdp.org/imgt-hla/3.24.0/multilocus-unphased-genotype/0",
+      "targetNamespace": "https://gl.nmdp.org/imgt-hla/3.25.0/"
+  }
+
 
 Description
 -----------

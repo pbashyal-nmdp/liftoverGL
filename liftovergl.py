@@ -203,10 +203,10 @@ def get_gl(uri):
 
 def build_output(s_response, t_response):
     output = {
-        "source_gl": s_response['text'],
-        "source_uri": s_response['location'],
-        "target_gl": t_response['text'],
-        "target_uri": t_response['location'],
+        "sourceGl": s_response['text'],
+        "sourceUri": s_response['location'],
+        "targetGl": t_response['text'],
+        "targetUri": t_response['location'],
     }
     return output
 
@@ -220,25 +220,37 @@ def main():
     group.add_argument("-u", "--uri",
                        help="GL Service URI of GL String",
                        type=str)
+    group.add_argument("-j", "--jfile",
+                       help="input file containing JSON",
+                       type=str)
     parser.add_argument("-s", "--source",
-                        required=True,
-                        help="Source IMGT/HLA version",
+                        help="Source IMGT/HLA version, e.g., '3.0.0'",
                         type=str)
     parser.add_argument("-t", "--target",
-                        help="Target IMGT/HLA version",
+                        help="Target IMGT/HLA version, e.g. '3.25.0'",
                         default="3.25.0",
                         type=str)
     args = parser.parse_args()
 
     args = parser.parse_args()
-    if (args.glstring is None) and (args.uri is None):
-        parser.error("at least one of --glstring or --uri required")
+    if (args.glstring is None) and (args.uri is None) and (args.jfile is None):
+        parser.error("at least one of --glstring or --uri required or --jfile")
+    if (args.jfile is None) and ((args.source is None) or (args.target is None)):
+        parser.error("you need to specify both --source and --target "
+                     "if you don't specify a --jfile")
 
     s_uri = args.uri
     gl = args.glstring
+    jfile = args.jfile
     source = args.source
     target = args.target
 
+    if jfile:
+        with open(jfile, 'r') as jf:
+            data = json.load(jf)
+        source = list(filter(None, data['sourceNamespace'].split("/")))[-1]
+        target = list(filter(None, data['targetNamespace'].split("/")))[-1]
+        s_uri = data['sourceUri']
     if s_uri:
         resource = s_uri.split('/')[-2]
         response = get_gl(s_uri)
@@ -252,18 +264,18 @@ def main():
         resource = get_resource(gl)
 
     history = read_history()
-    print("gl =", gl)
-    print("source =", source)
-    print("target =", target)
+    # print("gl =", gl)
+    # print("source =", source)
+    # print("target =", target)
     gl_ids = mk_glids(gl, source, history)
-    print("IDs =", gl_ids, "\n")
+    # print("IDs =", gl_ids, "\n")
     target_gl = mk_target(gl_ids, target, history)
     if not target_gl:
         print("empty target GL String, all alleles dropped")
         sys.exit()
-    print("target GL =", target_gl, "\n")
+    # print("target GL =", target_gl, "\n")
     s_response = post_gl(gl, source, resource)
-    print("source location =", s_response['text'], "\n")
+    # print("source location =", s_response['location'], "\n")
     t_response = post_gl(target_gl, target, resource)
     output = json.dumps(build_output(s_response, t_response),
                         sort_keys=True, indent=4)
