@@ -1,5 +1,7 @@
 liftovergl.py
 =============
+tested with Python 3.6
+
 Usage
 -----
 ::
@@ -25,7 +27,7 @@ This program uses the ``Allelelist_history.txt`` file from
 https://github.com/ANHIG/IMGTHLA
 which must be downloaded separately.
 
-Alleles are converted to HLA accession #s, and then mapped to directly alleles
+Alleles are converted to HLA IDs, and then mapped directly to alleles
 in the target version. If alleles do not exist in the target, then they are
 dropped from the target GL String. Alleles are not expanded to include new
 alleles. eg., the following alleles exist for 3.20.0 and 3.24.0:
@@ -40,6 +42,19 @@ alleles. eg., the following alleles exist for 3.20.0 and 3.24.0:
 | When ``HLA-A*24:03:01`` is converted from 3.20.0 to 3.25.0, it gets assigned to
 | ``HLA-A*24:03:01:01``  and not
 | ``HLA-A*24:03:01:01/HLA-A*24:03:01:02``
+
+Requirements:
+------------
+::
+
+#!/usr/bin/env python3
+import argparse
+import json
+import pandas
+import re
+import requests
+import sys
+
 
 Examples
 --------
