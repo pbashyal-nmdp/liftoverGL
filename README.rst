@@ -98,4 +98,4 @@ Same as above, but added ``HLA-B`` locus::
        "source_uri": "https://gl.nmdp.org/imgt-hla/3.18.0/multilocus-unphased-genotype/m",
        "target_gl": "HLA-A*26:111^HLA-B*40:10:01:01+HLA-B*44:03:01:01/HLA-B*44:03:02",
        "target_uri": "https://gl.nmdp.org/imgt-hla/3.25.0/multilocus-unphased-genotype/uy"
-   };
+   }
