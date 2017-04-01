@@ -1,4 +1,5 @@
-# pyliftover
+# liftovergl.py
+
 Converts a GL String from one version of the IMGT/HLA database to another.
 
 This program uses the Allelelist_history.txt file from
