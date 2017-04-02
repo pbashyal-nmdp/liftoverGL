@@ -55,6 +55,7 @@ The program returns JSON formated output: ::
 This program uses the ``Allelelist_history.txt`` file from
 https://github.com/ANHIG/IMGTHLA
 which must be downloaded separately.
+**NOTE: This script does NOT yet G-groups, since they are not in ``Allelelist_history.txt``** 
 
 Alleles are converted to HLA IDs, and then mapped directly to alleles
 in the target version. If alleles do not exist in the target, then they are

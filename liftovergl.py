@@ -36,37 +36,6 @@ import re
 import requests
 import sys
 
-# sample data
-G1 = ("HLA-A*02:06:01:01+HLA-A*11:01:01:01^"
-      "HLA-B*15:01:01:01+HLA-B*35:01:01:02^"
-      "HLA-C*03:02:02:01+HLA-C*04:01:01:01^"
-      "HLA-DPA1*02:02:02^"
-      "HLA-DPB1*05:01:01^"
-      "HLA-DQA1*03:01:01^"
-      "HLA-DQB1*03:02:01^"
-      "HLA-DRB1*04:03:01+HLA-DRB1*04:06:01^"
-      "HLA-DRB4*01:03:01:03")
-S1 = "3.22.0"
-T1 = "3.25.0"
-
-G2 = ("HLA-A*02:06:01:01+HLA-A*11:01:01:01/HLA-A*32:74^"
-      "HLA-B*15:01:01:01+HLA-A*32:74+HLA-B*35:01:01:02^"
-      "HLA-C*03:02:02:01+HLA-C*04:01:01:01~HLA-A*32:74^"
-      "HLA-DPA1*02:02:02^HLA-DPB1*05:01:01^HLA-A*32:74^"
-      "HLA-DQA1*03:01:01^HLA-DQB1*03:02:01^HLA-A*32:74+HLA-A*32:74^"
-      "HLA-DRB1*04:03:01/HLA-A*32:74/HLA-A*32:74/HLA-DRB1*04:06:01^"
-      "HLA-DRB4*01:03:01:03")
-S2 = "3.22.0"
-T2 = "3.0.0"
-
-G3 = ("HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01")
-S3 = "3.20.0"
-T3 = "3.25.0"
-
-G4 = ("HLA-A*23:69^HLA-DRB1*11:11:02+HLA-DRB1*08:01:03")
-S4 = "3.20.0"
-T4 = "3.25.0"
-
 
 def read_history():
     """
@@ -74,9 +43,14 @@ def read_history():
     https://github.com/ANHIG/IMGTHLA
     into a pandas dataframe.
     """
-    history = pd.read_csv("Allelelist_history.txt",
-                          sep="\t", header=0, index_col=0, dtype=str)
-    return history
+    history_file = "Allelelist_history.txt"
+    try:
+        history = pd.read_csv(history_file,
+                              sep="\t", header=0, index_col=0, dtype=str)
+        return history
+    except:
+        print("could not read {}".format(history_file))
+        sys.exit()
 
 
 def mk_glids(glstring, version, history):
@@ -89,16 +63,22 @@ def mk_glids(glstring, version, history):
     # middle field to two spaces,
     # so '3.1.0' becomes '3010'
     v = version.split(".")
-    vers = ''.join([v[0], v[1].zfill(2), v[-1]])
+    vers = "".join([v[0], v[1].zfill(2), v[-1]])
     for allele in get_alleles(glstring):
-        hla_id = history[history[vers] == allele[4:]].index.tolist()
-        if len(hla_id) == 1:
-            glstring = glstring.replace(allele, hla_id[0])
-        elif len(hla_id) == 0:
-            print(allele, "does not exist in IMGT/HLA ver", version)
-            sys.exit()
+        if allele[-1] != "G":
+            hla_id = history[history[vers] == allele[4:]].index.tolist()
+            if len(hla_id) == 1:
+                glstring = glstring.replace(allele, hla_id[0])
+            elif len(hla_id) == 0:
+                print("{} does not exist in "
+                      "IMGT/HLA ver {}".format(allele, version))
+                sys.exit()
+            else:
+                print("{} has more than one id: {}".format(allele, hla_id))
+                sys.exit()
         else:
-            print(allele, "has more than one id:", hla_id)
+            print("Sorry, this program does not handle "
+                  "G-groups right now: {}".format(allele))
             sys.exit()
     # glstring = gl_clean(glstring)
     return glstring
@@ -113,11 +93,12 @@ def mk_target(gl_ids, target, history):
     # middle field to two spaces,
     # so '3.1.0' becomes '3010'
     t = target.split(".")
-    targ = ''.join([t[0], t[1].zfill(2), t[-1]])
+    targ = "".join([t[0], t[1].zfill(2), t[-1]])
     target_gl = gl_ids
     for hla_id in get_alleles(gl_ids):
-        new_allele = "HLA-" + str(history[targ][hla_id])
-        target_gl = target_gl.replace(hla_id, new_allele)
+        # if hla_id[-1] != "G":
+            new_allele = "HLA-" + str(history[targ][hla_id])
+            target_gl = target_gl.replace(hla_id, new_allele)
     target_gl = gl_clean(target_gl)
     return target_gl
 
@@ -163,13 +144,13 @@ def get_resource(glstring):
     takes a GL String, and returns the resource type based on which
     delimiters are present
     """
-    if '^' in glstring:
+    if "^" in glstring:
         return "multilocus-unphased-genotype"
-    elif '|' in glstring:
+    elif "|" in glstring:
         return "genotype-list"
-    elif '+' in glstring:
+    elif "+" in glstring:
         return "genotype"
-    elif '~' in glstring:
+    elif "~" in glstring:
         return "haplotype"
     elif "/" in glstring:
         return "allele-list"
@@ -202,10 +183,10 @@ def get_gl(uri):
 
 def build_output(s_response, t_response):
     output = {
-        "sourceGl": s_response['text'],
-        "sourceUri": s_response['location'],
-        "targetGl": t_response['text'],
-        "targetUri": t_response['location'],
+        'sourceGl': s_response['text'],
+        'sourceUri': s_response['location'],
+        'targetGl': t_response['text'],
+        'targetUri': t_response['location'],
     }
     return output
 
@@ -227,7 +208,6 @@ def main():
                         type=str)
     parser.add_argument("-t", "--target",
                         help="Target IMGT/HLA version, e.g. '3.25.0'",
-                        default="3.25.0",
                         type=str)
     args = parser.parse_args()
 
@@ -240,6 +220,9 @@ def main():
     if (args.glstring) and ((args.target is None) or (args.source is None)):
         parser.error("If you specify GLSTRING, you need to also specify "
                      "both --source and --target")
+    if (args.uri) and (args.source):
+        print("Warning: source will be obtained from the URI, your specified "
+              "--source will be ignored")
 
     source_uri = args.uri
     gl = args.glstring
@@ -261,8 +244,8 @@ def main():
         if response.status_code == 200:
             gl = response.text
         else:
-            print("status_code =", response.status_code)
-            print("text =", response.text)
+            print("status_code = {}".format(response.status_code))
+            print("text = {}".format(response.text))
             sys.exit()
     if gl:
         resource = get_resource(gl)
@@ -277,9 +260,9 @@ def main():
     if not target_gl:
         print("empty target GL String, all alleles dropped")
         sys.exit()
-    # print("target GL =", target_gl, "\n")
+    # print("target GL = {}\n".format(target_gl))
     s_response = post_gl(gl, source, resource)
-    # print("source location =", s_response['location'], "\n")
+    # print("source location = {}\n".format(s_response['location']))
     t_response = post_gl(target_gl, target, resource)
     output = json.dumps(build_output(s_response, t_response),
                         sort_keys=True, indent=4)
