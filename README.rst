@@ -17,19 +17,20 @@ Usage
      -s SOURCE, --source SOURCE          Source IMGT/HLA version, e.g., '3.0.0'
      -t TARGET, --target TARGET          Target IMGT/HLA version, e.g. '3.25.0'
   
-Either of the following may be used for input:
+Any of the following may be used for input:
 
 - GLSTRING : GL String 
 - URI : URI pointing to a GL String, 
 - JFILE : JSON input file containing the URI and source and target namespaces
 
 | If GLSTRING is specified, TARGET and SOURCE also need to be specified
-| IF URI is specified, only TARGET needs to be specified since SOURCE is obtained from the URI 
-| If JFILE is specified, TARGET and SOURCE do not need to be specified since they are both contained in the Jason input file.
+| If URI is specified, only TARGET needs to be specified since SOURCE is obtained from the URI 
+| If JFILE is specified, TARGET and SOURCE do not need to be specified since they are both contained in the JSON input file.
 | 
 
+The JFILE input file uses the same JSON format used by the liftover service (https://gl.nmdp.org/liftover/)
 
-Example JSON input file::
+Example JFILE input file:: 
 
   {
       sourceNamespace: https://gl.nmdp.org/imgt-hla/3.20.0/,
