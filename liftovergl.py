@@ -3,8 +3,7 @@
 pyliftgl.py
 
 copyright
-    Bob Milius, PhD
-    31 March 2017
+    Bob Milius, PhD - 31 March 2017
     National Marrow Donor Program/Be The Match
 
 Lifts over a GL String from one version of the IMGT/HLA database to another.
