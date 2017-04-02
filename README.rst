@@ -57,8 +57,8 @@ https://github.com/ANHIG/IMGTHLA
 which must be downloaded separately.
 
 | **NOTE: This script does NOT yet G-groups, since they are not in Allelelist_history.txt** 
-
-Alleles are converted to HLA IDs, and then mapped directly to alleles
+|
+| Alleles are converted to HLA IDs, and then mapped directly to alleles
 in the target version. If alleles do not exist in the target, then they are
 dropped from the target GL String. Alleles are not expanded to include new
 alleles. eg., the following alleles exist for 3.20.0 and 3.24.0:
