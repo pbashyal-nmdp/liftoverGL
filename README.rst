@@ -7,16 +7,6 @@ Usage
 ::
 
    liftovergl.py --help
-   usage: liftovergl.py [-h] [-g GLSTRING | -u URI] -s SOURCE [-t TARGET]
-   
-   optional arguments:
-     -h, --help            show this help message and exit
-     -g GLSTRING, --glstring GLSTRING    GL String to be converted
-     -u URI,      --uri URI              GL Service URI of GL String
-     -s SOURCE,   --source SOURCE        Source IMGT/HLA version
-     -t TARGET,   --target TARGET        Target IMGT/HLA version
-
-   liftovergl.py -h
    usage: liftovergl.py [-h] [-g GLSTRING | -u URI | -j JFILE] [-s SOURCE] [-t TARGET]
 
    optional arguments:
@@ -25,18 +15,21 @@ Usage
      -u URI, --uri URI                   GL Service URI of GL String
      -f JFILE, --jfile JFILE             input file containing JSON
      -s SOURCE, --source SOURCE          Source IMGT/HLA version, e.g., '3.0.0'
-     -t TARGET, --target TARGET           Target IMGT/HLA version, e.g. '3.25.0'
+     -t TARGET, --target TARGET          Target IMGT/HLA version, e.g. '3.25.0'
   
 Either of the following may be used for input:
 
-- GL String 
-- URI pointing to a GL String, 
-- JSON file containing the URI and source and target namespaces
+- GLSTRING : GL String 
+- URI : URI pointing to a GL String, 
+- JFILE : JSON input file containing the URI and source and target namespaces
 
-If JFILE is used, TARGET and SOURCE to not need to be specified since it
-is contained in the JFILE.
+| If GLSTRING is specified, TARGET and SOURCE also need to be specified
+| IF URI is specified, only TARGET needs to be specified since SOURCE is 
+obtained from the URI 
+| If JFILE is specified, TARGET and SOURCE do not need to be specified since they 
+are both contained in the Jason input file.
 
-Example JFILE::
+Example JSON input file::
 
   {
       sourceNamespace: https://gl.nmdp.org/imgt-hla/3.20.0/,
@@ -48,6 +41,15 @@ Example JFILE::
 Description
 -----------
 Converts a GL String from one version of the IMGT/HLA database to another.
+
+The program returns JSON formated output: ::
+
+  {
+      sourceGl: "input GL String to be converted" 
+      sourceUri: "URI of GL String registered in a GL service" 
+      targetGl: "GL String converted to a different IMGT/HLA version"
+      targetUri: "URI of converted GL String"
+  }
 
 This program uses the ``Allelelist_history.txt`` file from
 https://github.com/ANHIG/IMGTHLA
@@ -84,9 +86,9 @@ Requirements:
 
 Examples
 --------
-Using a URI for input::
+Using a GL String for input::
 
-   ./liftovergl.py -u "https://gl.nmdp.org/imgt-hla/3.20.0/genotype/2i4" -s '3.20.0' -t '3.25.0'
+   ./liftovergl.py -g "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01" -s '3.20.0' -t '3.25.0'
    {
        "source_gl": "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01",
        "source_uri": "https://gl.nmdp.org/imgt-hla/3.20.0/genotype/2i4",
@@ -94,9 +96,9 @@ Using a URI for input::
        "target_uri": "https://gl.nmdp.org/imgt-hla/3.25.0/genotype/p9"
    }
 
-Using a GL String for input::
+Using a URI for input::
 
-   ./liftovergl.py -g "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01" -s '3.20.0' -t '3.25.0'
+   ./liftovergl.py -u "https://gl.nmdp.org/imgt-hla/3.20.0/genotype/2i4" -t '3.25.0'
    {
        "source_gl": "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01",
        "source_uri": "https://gl.nmdp.org/imgt-hla/3.20.0/genotype/2i4",
@@ -114,8 +116,7 @@ Using a JSON file with the example above for input::
        "target_uri": "https://gl.nmdp.org/imgt-hla/3.25.0/genotype/p9"
    }
 
-
-In the following example, three alleles get dropped going from ``3.18.0`` to ``3.25.0``,
+In the following example containing four alleles, three get dropped going from ``3.18.0`` to ``3.25.0``,
 and another's name is changed from ``HLA-A*26:03:02`` to ``HLA-A*26:111`` :: 
 
    ./liftovergl.py -g 'HLA-A*03:194+HLA-A*26:03:02^HLA-DRB1*11:11:02+HLA-DRB1*08:01:03' -s "3.18.0" -t "3.25.0"
@@ -133,5 +134,5 @@ Same as above, but added ``HLA-B`` locus::
        "source_gl": "HLA-A*03:194+HLA-A*26:03:02^HLA-B*40:10:01+HLA-B*44:03:01/HLA-B*44:03:02^HLA-DRB1*11:11:02+HLA-DRB1*08:01:03",
        "source_uri": "https://gl.nmdp.org/imgt-hla/3.18.0/multilocus-unphased-genotype/m",
        "target_gl": "HLA-A*26:111^HLA-B*40:10:01:01+HLA-B*44:03:01:01/HLA-B*44:03:02",
-       "target_uri": "https://gl.nmdp.org/imgt-hla/3.25.0/multilocus-unphased-genotype/uy"
+       "target_uri": "https://gl.nmdp.org/imgt-hla/4.25.0/multilocus-unphased-genotype/uy"
    }

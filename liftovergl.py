@@ -220,7 +220,7 @@ def main():
     group.add_argument("-u", "--uri",
                        help="GL Service URI of GL String",
                        type=str)
-    group.add_argument("-j", "--jfile",
+    group.add_argument("-f", "--jfile",
                        help="input file containing JSON",
                        type=str)
     parser.add_argument("-s", "--source",
@@ -235,11 +235,14 @@ def main():
     args = parser.parse_args()
     if (args.glstring is None) and (args.uri is None) and (args.jfile is None):
         parser.error("at least one of --glstring or --uri required or --jfile")
-    if (args.jfile is None) and ((args.source is None) or (args.target is None)):
-        parser.error("you need to specify both --source and --target "
-                     "if you don't specify a --jfile")
+    if (args.uri) and (args.target is None):
+        parser.error("If you specify URI, you need also need to specify "
+                     "a --target")
+    if (args.glstring) and ((args.target is None) or (args.source is None)):
+        parser.error("If you specify GLSTRING, you need to also specify "
+                     "both --source and --target")
 
-    s_uri = args.uri
+    source_uri = args.uri
     gl = args.glstring
     jfile = args.jfile
     source = args.source
@@ -250,10 +253,12 @@ def main():
             data = json.load(jf)
         source = list(filter(None, data['sourceNamespace'].split("/")))[-1]
         target = list(filter(None, data['targetNamespace'].split("/")))[-1]
-        s_uri = data['sourceUri']
-    if s_uri:
-        resource = s_uri.split('/')[-2]
-        response = get_gl(s_uri)
+        source_uri = data['sourceUri']
+    if source_uri:
+        uri_fields = list(filter(None, source_uri.split('/')))
+        source = uri_fields[-3]
+        resource = uri_fields[-2]
+        response = get_gl(source_uri)
         if response.status_code == 200:
             gl = response.text
         else:
