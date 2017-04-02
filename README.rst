@@ -24,10 +24,8 @@ Either of the following may be used for input:
 - JFILE : JSON input file containing the URI and source and target namespaces
 
 | If GLSTRING is specified, TARGET and SOURCE also need to be specified
-| IF URI is specified, only TARGET needs to be specified since SOURCE is 
-obtained from the URI 
-| If JFILE is specified, TARGET and SOURCE do not need to be specified since they 
-are both contained in the Jason input file.
+| IF URI is specified, only TARGET needs to be specified since SOURCE is obtained from the URI 
+| If JFILE is specified, TARGET and SOURCE do not need to be specified since they are both contained in the Jason input file.
 
 Example JSON input file::
 
