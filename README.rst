@@ -52,13 +52,14 @@ The program returns JSON formated output: ::
       targetUri: "URI of converted GL String"
   }
 
-This program uses the ``Allelelist_history.txt`` file from
-https://github.com/ANHIG/IMGTHLA
-which must be downloaded separately.
+This program uses a ``AllelelistGgroups_history.txt`` file which was created by
+combining data from ``Allelelist_history.txt``, ``hml_ambigs..xml``, and 
+``hla_nom_g.txt`` files from https://github.com/ANHIG/IMGTHLA. The 
+``AllelelistGgroups_history.txt`` will need to regenerated every time a 
+new version of the IMGT/HLA database is released.
 
-| **NOTE: This script does NOT yet G-groups, since they are not in Allelelist_history.txt** 
-|
-| Alleles are converted to HLA IDs, and then mapped directly to alleles
+| Alleles and G-groups are converted to HLA and HGG IDs, respectively, and 
+then mapped directly to alleles
 in the target version. If alleles do not exist in the target, then they are
 dropped from the target GL String. Alleles are not expanded to include new
 alleles. eg., the following alleles exist for 3.20.0 and 3.24.0:
@@ -138,4 +139,14 @@ Same as above, but added ``HLA-B`` locus::
        "sourceUri": "https://gl.nmdp.org/imgt-hla/3.18.0/multilocus-unphased-genotype/m",
        "targetGl": "HLA-A*26:111^HLA-B*40:10:01:01+HLA-B*44:03:01:01/HLA-B*44:03:02",
        "targetUri": "https://gl.nmdp.org/imgt-hla/4.25.0/multilocus-unphased-genotype/uy"
+   }
+
+multilocus-unphased-genotype containing a G-group::
+
+   ./liftovergl.py -f mugG.json
+   {
+      "sourceGl": "HLA-A*01:01:01G+HLA-A*26:03:02^HLA-B*40:10:01+HLA-B*44:03:01/HLA-B*44:03:02",
+      "sourceUri": "https://gl.nmdp.org/imgt-hla/3.18.0/multilocus-unphased-genotype/n",
+      "targetGl": "HLA-A*01:01:01G+HLA-A*26:111^HLA-B*40:10:01:01+HLA-B*44:03:01:01/HLA-B*44:03:02",
+      "targetUri": "https://gl.nmdp.org/imgt-hla/3.25.0/multilocus-unphased-genotype/uz"
    }

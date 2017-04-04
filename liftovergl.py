@@ -43,7 +43,8 @@ def read_history():
     https://github.com/ANHIG/IMGTHLA
     into a pandas dataframe.
     """
-    history_file = "Allelelist_history.txt"
+    # history_file = "Allelelist_history.txt"
+    history_file = "AllelelistGgroups_history.txt"
     try:
         history = pd.read_csv(history_file,
                               sep="\t", header=0, index_col=0, dtype=str)
@@ -65,7 +66,7 @@ def mk_glids(glstring, version, history):
     v = version.split(".")
     vers = "".join([v[0], v[1].zfill(2), v[-1]])
     for allele in get_alleles(glstring):
-        if allele[-1] != "G":
+        # if allele[-1] != "G":
             hla_id = history[history[vers] == allele[4:]].index.tolist()
             if len(hla_id) == 1:
                 glstring = glstring.replace(allele, hla_id[0])
@@ -76,10 +77,10 @@ def mk_glids(glstring, version, history):
             else:
                 print("{} has more than one id: {}".format(allele, hla_id))
                 sys.exit()
-        else:
-            print("Sorry, this program does not handle "
-                  "G-groups right now: {}".format(allele))
-            sys.exit()
+        # else:
+        #     print("Sorry, this program does not handle "
+        #           "G-groups right now: {}".format(allele))
+        #     sys.exit()
     # glstring = gl_clean(glstring)
     return glstring
 
