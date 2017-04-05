@@ -39,7 +39,7 @@ import sys
 
 def read_history():
     """
-    reads the Allelelist_history.txt file that was downloaded from
+    reads the AllelelistGgroups_history.txt file that was downloaded from
     https://github.com/ANHIG/IMGTHLA
     into a pandas dataframe.
     """

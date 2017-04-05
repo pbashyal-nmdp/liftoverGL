@@ -53,7 +53,7 @@ The program returns JSON formated output: ::
   }
 
 This program uses a ``AllelelistGgroups_history.txt`` file which was created by
-combining data from ``Allelelist_history.txt``, ``hml_ambigs..xml``, and 
+combining data from ``Allelelist_history.txt``, ``hml_ambigs.xml``, and 
 ``hla_nom_g.txt`` files from https://github.com/ANHIG/IMGTHLA. The 
 ``AllelelistGgroups_history.txt`` will need to regenerated every time a 
 new version of the IMGT/HLA database is released.
