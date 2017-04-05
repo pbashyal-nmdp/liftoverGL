@@ -8,13 +8,27 @@ copyright
 
 Lifts over a GL String from one version of the IMGT/HLA database to another.
 
-This program uses the Allelelist_history.txt file from
+usage:
+liftovergl.py [-h] [-g GLSTRING | -u URI | -j JSONFILE] [-s SOURCE] [-t TARGET]
+
+optional arguments:
+  -h, --help                           show this help message and exit
+  -g GLSTRING, --glstring GLSTRING     GL String to be converted
+  -u URI, --uri URI                    GL Service URI of GL String
+  -f JSONFILE, --jsonfile JSONFILE     input file containing JSON
+  -s SOURCE, --source SOURCE           Source IMGT/HLA version, e.g., '3.0.0'
+  -t TARGET, --target TARGET           Target IMGT/HLA version, e.g. '3.25.0'
+
+This program uses AllelelistGgroups_history.txt file that was created by
+merging data from the Allelellist_history.txt, hla_ambigs.xml, and
+hla_nom_g.txt files that can be obtained from
 https://github.com/ANHIG/IMGTHLA
 
-Alleles are converted to HLA accession #s, and then mapped to directly alleles
-in the target version. If alleles do not exist in the target, then they are
-dropped from the target GL String. Alleles are not expanded to include new
-alleles. eg., the following alleles exist for 3.20.0 and 3.24.0:
+Alleles and G-groups are converted to accession #s, and then mapped to
+directly to alleles in the target version. If alleles do not exist in the
+target, then they are dropped from the target GL String. Alleles are not
+expanded to include new alleles. eg., the following alleles exist for
+3.20.0 and 3.24.0:
 
 3.20.0
 HLA00053 HLA-A*24:03:01
@@ -27,6 +41,9 @@ When HLA-A*24:03:01 is converted from 3.20.0 to 3.25.0, it gets assigned to
 HLA-A*24:03:01:01
 and not
 HLA-A*24:03:01:01/HLA-A*24:03:01:02
+
+See the README.rst file for more information.
+
 """
 
 import argparse
