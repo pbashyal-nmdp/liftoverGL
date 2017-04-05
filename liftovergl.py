@@ -177,9 +177,24 @@ def post_gl(glstring, version, resource):
                 'text': response.text}
 
 
-def get_gl(uri):
-    response = requests.get(uri)
-    return response
+# def get_gl(uri):
+#     response = requests.get(uri)
+#     return response
+
+
+def from_source_uri(source_uri):
+    uri_fields = list(filter(None, source_uri.split('/')))
+    source = uri_fields[-3]
+    resource = uri_fields[-2]
+    # print("source_uri = ", source_uri)
+    response = requests.get(source_uri)
+    if response.status_code == 200:
+        gl = response.text
+        return (gl, source, resource)
+    else:
+        print("status_code = {}".format(response.status_code))
+        print("text = {}".format(response.text))
+        sys.exit()
 
 
 def build_output(s_response, t_response):
@@ -234,22 +249,14 @@ def main():
     if jfile:
         with open(jfile, 'r') as jf:
             data = json.load(jf)
-        source = list(filter(None, data['sourceNamespace'].split("/")))[-1]
         target = list(filter(None, data['targetNamespace'].split("/")))[-1]
         source_uri = data['sourceUri']
-    if source_uri:
-        uri_fields = list(filter(None, source_uri.split('/')))
-        source = uri_fields[-3]
-        resource = uri_fields[-2]
-        response = get_gl(source_uri)
-        if response.status_code == 200:
-            gl = response.text
-        else:
-            print("status_code = {}".format(response.status_code))
-            print("text = {}".format(response.text))
-            sys.exit()
-    if gl:
+        gl, source, resource = from_source_uri(source_uri)
+    elif gl:
+        # get source and target from command line
         resource = get_resource(gl)
+    if source_uri:
+        gl, source, resource = from_source_uri(source_uri)
 
     history = read_history()
     # print("gl =", gl)
