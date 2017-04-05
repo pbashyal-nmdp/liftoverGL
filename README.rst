@@ -1,36 +1,37 @@
+#############
 liftovergl.py
-=============
-tested with Python 3.6
+#############
 
+=====
 Usage
------
+=====
 ::
 
    liftovergl.py --help
-   usage: liftovergl.py [-h] [-g GLSTRING | -u URI | -j JFILE] [-s SOURCE] [-t TARGET]
+   usage: liftovergl.py [-h] [-g GLSTRING | -u URI | -j JSONFILE] [-s SOURCE] [-t TARGET]
 
    optional arguments:
-     -h, --help                          show this help message and exit
-     -g GLSTRING, --glstring GLSTRING    GL String to be converted
-     -u URI, --uri URI                   GL Service URI of GL String
-     -f JFILE, --jfile JFILE             input file containing JSON
-     -s SOURCE, --source SOURCE          Source IMGT/HLA version, e.g., '3.0.0'
-     -t TARGET, --target TARGET          Target IMGT/HLA version, e.g. '3.25.0'
+     -h, --help                           show this help message and exit
+     -g GLSTRING, --glstring GLSTRING     GL String to be converted
+     -u URI, --uri URI                    GL Service URI of GL String
+     -f JSONFILE, --jsonfile JSONFILE     input file containing JSON
+     -s SOURCE, --source SOURCE           Source IMGT/HLA version, e.g., '3.0.0'
+     -t TARGET, --target TARGET           Target IMGT/HLA version, e.g. '3.25.0'
   
 Any of the following may be used for input:
 
 - GLSTRING : GL String 
 - URI : URI pointing to a GL String, 
-- JFILE : JSON input file containing the URI and source and target namespaces
+- JSONFILE : JSON input file containing the URI and source and target namespaces
 
 | If GLSTRING is specified, TARGET and SOURCE also need to be specified
 | If URI is specified, only TARGET needs to be specified since SOURCE is obtained from the URI 
-| If JFILE is specified, TARGET and SOURCE do not need to be specified since they are both contained in the JSON input file.
+| If JSONFILE is specified, TARGET and SOURCE do not need to be specified since they are both contained in the JSON input file.
 | 
 
-The JFILE input file uses the same JSON format used by the liftover service (https://gl.nmdp.org/liftover/)
+The JSONFILE input file uses the same JSON format used by the liftover service (https://gl.nmdp.org/liftover/)
 
-Example JFILE input file:: 
+Example JSONFILE input file:: 
 
   {
       sourceNamespace: https://gl.nmdp.org/imgt-hla/3.20.0/,
@@ -39,8 +40,10 @@ Example JFILE input file::
   }
 
 
+===========
 Description
------------
+===========
+
 Converts a GL String from one version of the IMGT/HLA database to another.
 
 The program returns JSON formated output: ::
@@ -75,21 +78,44 @@ alleles. eg., the following alleles exist for 3.20.0 and 3.24.0:
 | ``HLA-A*24:03:01:01``  and not
 | ``HLA-A*24:03:01:01/HLA-A*24:03:01:02``
 
-Requirements:
-------------
+============
+Requirements
+============
+
+This program has been tested using Python 3.6.
+
+Modules
+-------
+
 ::
 
   #!/usr/bin/env python3
   import argparse
   import json
+  import os
   import pandas
   import re
   import requests
   import sys
 
+Environment variables
+---------------------
 
+``liftovergl.py`` looks for ``AllelelistGgroups_history.txt`` in the
+directory that is pointed to by the ``IMGTHLA`` environment variable.
+
+If you use ``bash``, add something like this line in your
+``.bash_profile`` or ``~/.bashrc`` file depending on where you would
+like to store the file::
+
+    export IMGTHLA="$HOME/imgthla"
+
+and copy the ``AllelelistGgroups_history.txt`` file to ``$IMGTHLA``
+
+========
 Examples
---------
+========
+
 Using a GL String for input::
 
    ./liftovergl.py -g "HLA-A*01:01:01:01/HLA-A*01:02+HLA-A*24:03:01" -s '3.20.0' -t '3.25.0'
