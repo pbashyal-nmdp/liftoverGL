@@ -242,7 +242,7 @@ def main():
 
     # handle input options
     if jsonfile:
-        # same json format used by gl.nmdp.org/imgt-hla/liftover
+        # same json format used by gl.nmdp.org/liftover
         with open(jsonfile, 'r') as jf:
             data = json.load(jf)
         target = list(filter(None, data['targetNamespace'].split("/")))[-1]
