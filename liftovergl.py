@@ -71,6 +71,14 @@ def read_history():
         sys.exit()
 
 
+class Ret:
+    def __init__(self, retstring, errorflag):
+        self.retstring = retstring
+        self.errorflag = errorflag
+    def err(self, retstring):   
+        self.retstring = retstring      
+        self.errorflag = 1
+
 def mk_glids(glstring, version, history):
     """
     takes a GL String containing allele names for a version of
@@ -86,13 +94,10 @@ def mk_glids(glstring, version, history):
         if len(hla_id) == 1:
             glstring = glstring.replace(allele, hla_id[0])
         elif len(hla_id) == 0:
-            print("{} does not exist in "
-                    "IMGT/HLA ver {}".format(allele, version))
-            sys.exit()
+            return Ret("{} does not exist in IMGT/HLA ver {}".format(allele, version),1)
         else:
-            print("{} has more than one id: {}".format(allele, hla_id))
-            sys.exit()
-    return glstring
+            return Ret("{} has more than one id: {}".format(allele, hla_id),1)
+    return Ret(glstring,0)
 
 
 def mk_target(gl_ids, target, history):
@@ -143,6 +148,7 @@ def get_alleles(glstring):
     Takes a GL String, and returns a set containing all the alleles
     """
     alleles = set()
+    print ("get_alleles:", glstring)
     for allele in re.split(r'[/~+|^]', glstring):
         alleles.add(allele)
     return alleles
@@ -276,7 +282,11 @@ def main():
     # print("glstring =", glstring)
     # print("source =", source)
     # print("target =", target)
-    gl_ids = mk_glids(glstring, source, history)
+    r = mk_glids(glstring, source, history)
+    if r.errorflag:
+        print (r.retstring)
+        sys.exit() 
+    gl_ids = r.retstring
     # print("IDs =", gl_ids, "\n")
     target_gl = mk_target(gl_ids, target, history)
     if not target_gl:
